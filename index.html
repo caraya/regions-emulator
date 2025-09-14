@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Regions Emulator - Example</title>
+    <style>
+      body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fdfdfd;
+            margin: 0;
+            padding: 2rem;
+            counter-reset: region-counter;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        #source-content {
+            display: none; /* Hide the original content source */
+        }
+
+        .regions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        
+        .interstitial-content {
+            background-color: #e8f4f8;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .featured-region-container {
+            text-align: center;
+        }
+
+        .featured-region-container h2 {
+            color: #34495e;
+            margin-bottom: 1rem;
+        }
+
+        .region {
+            min-width: 300px;
+            height: 450px;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            overflow: hidden; /* This is key for the region behavior */
+            position: relative;
+        }
+
+        .featured-region-container .region {
+            height: 300px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .region::before {
+            content: 'Region ' counter(region-counter);
+            counter-increment: region-counter;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .regions-container {
+                grid-template-columns: 1fr;
+            }
+            .region {
+                width: 100%;
+                max-width: 500px;
+                height: auto;
+                min-height: 400px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <h1>JavaScript CSS Regions Emulator</h1>
+      <!-- The content that will be flowed into the regions -->
+      <div id="source-content">
+        <h2>A Journey Through Flowing Content</h2>
+        <p>This is the beginning of a story that will flow across multiple containers, much like a river finding its path through different landscapes. The concept of CSS Regions was designed to allow content to flow from one element to another, creating magazine-like layouts on the web. While the specification is not widely supported in modern browsers, we can emulate its core behavior with the power of JavaScript.</p>
+        <p>The library you are seeing in action takes the content from this hidden
+          <code>div</code>
+          and intelligently distributes it. It calculates how much content can fit into the first region, then pushes the remainder to the next, and so on. This process continues until all the content is displayed or all regions are filled.</p>
+        <h3>How It Works</h3>
+        <p>The process begins by taking all the child nodes of the source element. We then create a clone of the source element for each region. We append the children one by one to the cloned element inside a region and check if its content height exceeds the region's available height. When an overflow is detected, we know that the last added word or element is the one that needs to be moved to the next region.</p>
+        <p>To handle text gracefully, we split it into words. This allows us to break content at word boundaries instead of in the middle of a word, ensuring readability. For non-text elements like images or blockquotes, the entire element is moved to the next region if it doesn't fit.</p>
+        <h4>Added Content to Demonstrate Overflow</h4>
+        <p>This is a new section of text added specifically to create more content than can fit in the first four regions. By adding this extra material, we can now observe the script's intended behavior: once Region 4 is full, the flow will correctly skip over the interstitial content and continue into Region 5.</p>
+        <p>Every layout system, whether native CSS or JavaScript-driven, must handle overflow. This is a fundamental concept in web design. Our emulator proves its robustness by managing this overflow gracefully, just as the original CSS Regions specification intended. The content doesn't just disappear; it finds the next available container.</p>
+        <h4>Ensuring the Flow Reaches the Final Destination</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.</p>
+        <p>Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh.</p>
+        <p>Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam. Sorbi in harami, man. Pellentesque sodales. Quisque est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam.</p>
+        <p>This is another paragraph to ensure there is plenty of text. The more content we have, the more we can appreciate the dynamic nature of this flowing layout. It allows for a separation of content and presentation, where the HTML is purely semantic, and the layout is defined independently by the placement of regions.</p>
+        <p>Consider the complexity involved. The script has to manage different types of nodes—text nodes, element nodes, and potentially comments. It has to accurately measure the rendered height of content, which can be affected by numerous CSS properties like
+          <code>font-size</code>,
+          <code>line-height</code>,
+          <code>padding</code>, and
+          <code>margin</code>.</p>
+        <blockquote>"The measure of intelligence is the ability to change," a wise person once said. This library adapts the content to the available space.</blockquote>
+        <p>This dynamic distribution allows for responsive designs where the layout can change, but the content flow remains logical and unbroken. If you resize this window, you might see the content reflow, although this simple demo requires a reload to trigger the reflowing logic again. A more advanced version could use a
+          <code>ResizeObserver</code>
+          to do this in real-time.</p>
+        <p>This paragraph should be the last one to flow. If you can read this, it means the entire content from the source has been successfully distributed across all the available regions. This is a testament to the flexibility of JavaScript in recreating powerful layout specifications that didn't make it into the final web standards. The end.</p>
+      </div>
+      <!-- The containers where the content will flow -->
+      <div class="regions-container">
+        <div class="region"></div>
+        <div class="region"></div>
+        <div class="region"></div>
+        <div class="region"></div>
+      </div>
+      <div class="interstitial-content">
+        <h2>Content Outside a Region</h2>
+        <p>This entire section is not a designated region. The JavaScript library will ignore this area and the content flow will continue from Region 4 directly to Region 5, demonstrating that only elements with the '.region' class are considered for the flow.</p>
+      </div>
+      <div class="featured-region-container">
+        <h2>A Separate, Featured Region</h2>
+        <div class="region"></div>
+      </div>
+    </div>
+    <!-- The script has been moved to its own file -->
+    <script type="module" src="/src/regions-emulator.js"></script>
+    <script type="module">
+      import CSSRegionsEmulator from './src/regions-emulator.js';
+
+      // Wait for the DOM to be fully loaded
+      document.addEventListener('DOMContentLoaded', () => {
+          new CSSRegionsEmulator('#source-content', '.region');
+      });
+    </script>
+  </body>
+</html>
