@@ -1,3 +1,13 @@
+/**
+ * CSS Regions Emulator
+ * This script emulates CSS Regions by flowing content from a source element
+ * into multiple region elements. It handles dynamic content changes and resizing.
+ *
+ * Usage:
+ *   const emulator = new CSSRegionsEmulator('#source', '.region');
+ *   // To stop observing and clean up:
+ *   // emulator.destroy();
+ */
 class CSSRegionsEmulator {
   constructor(sourceSelector, regionSelector) {
     this.sourceElement = document.querySelector(sourceSelector);
